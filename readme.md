@@ -846,7 +846,266 @@ Pointer to pointer:
 	}
  ### So sánh giữa struct và union
 ![image](https://github.com/user-attachments/assets/7239cec4-2c31-4297-99da-2011137f776e)
-
+</details>
+ <details><summary>LESSON 8: MEMORY LAYOUT </summary>
+  <p>
+	  
+ ## LESSON 8: MEMORY LAYOUT
+- Bố cục bộ nhớ (Memory Layout) là cách mà dữ liệu được tổ chức và lưu trữ trong bộ nhớ của máy tính. Nó bao gồm việc dữ liệu được sắp xếp như thế nào trong bộ nhớ khi chương trình đang chạy, cách các loại dữ liệu khác nhau được lưu trữ và cách bộ nhớ được phân bổ.
+- Chương trình main.exe ( trên window), main.hex ( nạp vào vi điều khiển) được lưu ở bộ nhớ SSD hoặc FLASH. Khi nhấn run chương trình trên window ( cấp nguồn cho vi điều khiển) thì những chương trình này sẽ được copy vào bộ nhớ RAM để thực thi.
+- Chương trình C/C++ được tổ chức lưu trong memory layout (phân vùng nhớ) thành các phần như sau:
+### Text segment
+- Đặc điểm: Segment mã chứa mã nguồn đã biên dịch của chương trình, tức là các chỉ thị máy tính. Cụ thể, Text Segment chứa mã máy đã được biên dịch từ mã nguồn của chương trình và được CPU thực thi để thực hiện các hành động quy định trong chương trình.
+- Hoạt động:
+	- Chỉ có quyền đọc và thực thi: Thường thì phần này được đánh dấu là chỉ đọc để tránh sửa đổi mã chương trình (mã máy), (không có quyền ghi).
+	- Chứa mã máy (chương trình): Bao gồm các hàm và chỉ thị của chương trình đã biên dịch(tập hợp các lệnh thực thi được CPU hiểu được).
+ 	- Kích thước cố định: kích thước của text segment thường là cố định nên giúp hệ điều hành và CPU dễ dàng quản lí vùng nhớ này
+  	- Lưu trữ các hằng số, con trỏ kiểu char 
+   ![image](https://github.com/user-attachments/assets/622cf571-2e60-46f4-a268-4a371f55a55b)
+	```c
+	 #include <stdio.h>
+	
+	const int a = 10;
+	char arr[] = "Hello";
+	char *arr1 = "Hello";
+	
+	int main() {
+	   
+	
+	    printf("a: %d\n", a);
+	
+	    arr[3] = 'W';
+	    printf("arr: %s", arr);
+	
+	    arr1[3] = 'E';
+	    printf("arr1: %s", arr1);
+	
+	    
+	    return 0;
+	}
+### Data segment - Initialized Data Segment
+- Đặc điểm: Segment dữ liệu dùng để lưu trữ các dữ liệu tĩnh gồm các biến toàn cục và biến tĩnh (static) đều được khởi tạo với giá trị khác 0, tức là các biến mà không phụ thuộc vào thời gian chạy của chương trình.
+- Hoạt động:
+	- Biến toàn cục: Biến được khai báo ngoài các hàm, có thể truy cập từ bất kỳ đâu trong chương trình.
+	- Biến tĩnh: Biến được khai báo với từ khóa static trong C/C++, giữ giá trị giữa các lần gọi hàm. Có thể được truy cập chỉ trong phạm vi của hàm được khai báo.
+	- Khởi tạo: Segment này chứa cả các biến toàn cục/tĩnh đã khởi tạo và chưa khởi tạo (phần chưa khởi tạo thường gọi là BSS).
+   		- Initialized Data Segment (Dữ liệu Đã Khởi Tạo): Chứa giá trị của các biến toàn cục và biến tĩnh được khởi tạo với giá trị ban đầu. Dữ liệu này được sao chép từ bộ nhớ của chương trình thực thi.
+ 	- Quyền truy cập là đọc và ghi, tức có thể đọc và thay đổi giá trị của biến.
+  	- Tất cả các biến sẽ được thu hồi sau khi chương trình kết thúc
+ 	- Kích thước của Data Segment có thể thay đổi trong quá trình thực thi của chương trình.
+![image](https://github.com/user-attachments/assets/955c4a78-cfc1-487f-be5c-7e7b0b14e12d)
+	```c
+ 	#include <stdio.h>
+	int a = 10;
+	double d = 20.5;
+	
+	static int var = 5;
+	
+	void test()
+	{
+	    static int local = 10;
+	}
+	
+	
+	int main(int argc, char const *argv[])
+	{  
+	    a = 15;
+	    d = 25.7;
+	    var = 12;
+	    printf("a: %d\n", a);
+	    printf("d: %f\n", d);
+	    printf("var: %d\n", var);
+	
+	
+	
+	    return 0;
+	}
+	```c 
+	 #include <stdio.h>
+	
+	const int a = 10;			    // Hằng số
+	char *arr1 = "Hello";			// Con trỏ kiểu char
+	
+	int main() 
+	{
+	    //a=10;             		// Không được phép thay đổi->Bị lỗi
+	    //arr1[3] = 'E';
+	
+	    printf("a: %d\n", a);
+	    printf("arr1: %s", arr1);
+	
+	    return 0;
+	}
+### Bss segment - Uninitialized Data Segment
+- Chứa các biến toàn cục khởi tạo với giá trị bằng 0 hoặc không gán giá trị.
+- Chứa các biến static với giá trị khởi tạo bằng 0 hoặc không gán giá trị.
+- Quyền truy cập là đọc và ghi, tức là có thể đọc và thay đổi giá trị của biến .
+- Tất cả các biến sẽ được thu hồi sau khi chương trình kết thúc.
+- Uninitialized Data Segment (Dữ liệu Chưa Khởi Tạo): Chứa giá trị mặc định của các biến toàn cục và biến tĩnh mà không cần khởi tạo giá trị ban đầu. Dữ liệu trong phân vùng này thường được xác định bởi giá trị 0.
+![image](https://github.com/user-attachments/assets/c3af5bad-21b7-4afd-9151-4ae99843b3ba)
+	```c
+	#include <stdio.h>
+	typedef struct 
+	{
+	    int x;
+	    int y;
+	} Point_Data;
+	
+	
+	int a = 0;
+	int b;
+	
+	static int global = 0;
+	static int global_2;
+	static Point_Data p1 = {5,7};
+	void test()
+	{
+	    static int local = 0;
+	    static int local_2;
+	}
+	
+	int main() {
+	    printf("a: %d\n", a);
+	    printf("global: %d\n", global);
+	    return 0;
+	}
+### Stack
+- Đặc điểm: Bộ nhớ stack được sử dụng để lưu trữ các biến cục bộ (tức là các biến được khai báo trong các hàm và chỉ có giá trị trong phạm vi của hàm đó) và thông tin về các lời gọi hàm, tham số truyền vào.
+- Hoạt động:
+	- Lưu trữ lời gọi hàm: Mỗi lần hàm được gọi, một "stack frame" được tạo ra để lưu trữ các biến cục bộ của hàm, địa chỉ trả về và các thông tin liên quan khác. Sau khi ra khỏi hàm, sẽ thu hồi vùng nhớ.
+	- Nguyên tắc LIFO (Last In, First Out): Bộ nhớ stack hoạt động theo kiểu dữ liệu vào sau sẽ ra trước (mới gọi hàm sẽ nằm trên cùng).
+	- Giới hạn: Stack có kích thước cố định, nếu vượt quá có thể gây ra lỗi "stack overflow."
+   	- Quyền truy cập: Đọc và ghi, nghĩa là có thể đọc và thay đổi giá trị của biến trong suốt thời gian chương trình chạy.
+	- Kích thước cố định: Tùy thuộc vào hệ điều hành khác nhau.
+   	- Stack pointer: Con trỏ ngăn xếp (stack pointer) giữ địa chỉ hiện tại của stack và được cập nhật liên tục khi dữ liệu được đẩy vào hoặc lấy ra.
+- Stack là một cơ chế quan trọng trong quá trình thực thi chương trình và thường được sử dụng để quản lý luồng thực thi, gọi hàm, và theo dõi các biến cục bộ. Các ngôn ngữ lập trình thường sử dụng ngăn xếp để triển khai thực thi hàm và quản lý các biến cục bộ.
+	```c
+	#include <stdio.h>
+	void test()
+	{
+	    int test = 0;
+	    test = 5;
+	    printf("test: %d\n",test);
+	}
+	
+	int sum(int a, int b)
+	{
+	    int c = a + b;
+	    printf("sum: %d\n",c);
+	    return c;
+	}
+	
+	int main() {
+	
+	    sum(3,5);
+	    /*
+	        0x01
+	        0x02
+	        0x03
+	    */
+	   test();
+	   /*
+	    int test = 0; // 0x01
+	   */
+	    return 0;
+	}
+ ### Heap
+- Đặc điểm: Bộ nhớ heap dùng để phân bổ bộ nhớ động, tức là bộ nhớ được cấp phát khi chương trình đang chạy (cấp phát động).
+- Hoạt động:
+	- Cấp phát động: Dữ liệu như đối tượng, cấu trúc dữ liệu có thể được cấp phát bộ nhớ tại thời điểm chạy.Điều này cho phép chương trình tạo ra và giải phóng bộ nhớ theo nhu cầu, thích ứng với sự biến đổi của dữ liệu trong quá trình chạy.
+	- Quản lý bộ nhớ: Người lập trình phải giải phóng bộ nhớ khi không còn sử dụng để tránh rò rỉ bộ nhớ (memory leaks).
+	- Phân mảnh: Khi bộ nhớ được cấp phát và giải phóng, có thể tạo ra các khoảng trống, dẫn đến phân mảnh bộ nhớ.
+   	- Quyền truy cập: Bộ nhớ trên heap thường có quyền đọc và ghi, nghĩa là dữ liệu có thể được đọc và sửa đổi trong suốt thời gian chương trình chạy.
+   	- Cấp Phát và Giải Phóng Bộ Nhớ: Các hàm như malloc()(Tham số truyền vào: kích thước mong muốn(byte), Giá trị trả về: con trỏ void), calloc(), realloc(), và free() được sử dụng để cấp phát và giải phóng bộ nhớ trên heap.
+	- Kích Thước Thay Đổi: Kích thước của heap có thể thay đổi trong quá trình thực thi của chương trình, tùy thuộc vào các thao tác cấp phát và giải phóng bộ nhớ.
+	- Không Giữ Giá Trị Mặc Định: Bộ nhớ trên heap không giữ giá trị mặc định như trong Data Segment. Nếu không được khởi tạo, giá trị của biến trên heap sẽ không xác định.
+	```c
+	 #include <stdlib.h>
+	int main() {
+	    int *arr_malloc, *arr_calloc;
+	    size_t size = 5;
+	
+	    // Sử dụng malloc
+	    arr_malloc = (int*)malloc(size * sizeof(int));
+	
+	    // Sử dụng calloc
+	    arr_calloc = (int*)calloc(size, sizeof(int));
+	
+	    // ...
+	
+	    // Giải phóng bộ nhớ
+	    free(arr_malloc);
+	    free(arr_calloc);
+	
+	    return 0;
+	}
+- ví dụ
+  	``c
+	  #include <stdio.h>
+	 #include <stdlib.h>
+	int main(int argc, char const *argv[])
+	{  
+	    int soluongkytu = 0;
+	
+	    char* ten = (char*) malloc(sizeof(char) * soluongkytu);
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("Nhap so luong ky tu trong ten: \n");
+	        scanf("%d", &soluongkytu);
+	        ten = realloc(ten, sizeof(char) * soluongkytu);
+	        printf("Nhap ten cua ban: \n");
+	        scanf("%s", ten);
+	
+	        printf("Hello %s\n", ten);
+	    }
+	    return 0;
+	}
+### Stack và Heap
+- Bộ nhớ Stack được dùng để lưu trữ các biến cục bộ trong hàm, tham số truyền vào... Truy cập vào bộ nhớ này rất nhanh và được thực thi khi chương trình được biên dịch.
+- Bộ nhớ Heap được dùng để lưu trữ vùng nhớ cho những biến con trỏ được cấp phát động bởi các hàm malloc - calloc - realloc (trong C).
+- Stack: vùng nhớ Stack được quản lý bởi hệ điều hành, dữ liệu được lưu trong Stack sẽ tự động giải phóng khi hàm thực hiện xong công việc của mình.
+- Heap: Vùng nhớ Heap được quản lý bởi lập trình viên (trong C hoặc C++), dữ liệu trong Heap sẽ không bị hủy khi hàm thực hiện xong, điều đó có nghĩa bạn phải tự tay giải phóng vùng nhớ bằng câu lệnh free (trong C), và delete hoặc delete [] (trong C++), nếu không sẽ xảy ra hiện tượng rò rỉ bộ nhớ.
+  ```c
+	  #include <stdio.h>
+	  #include <stdlib.h>
+	
+	void test1()
+	{
+	    int array[3];
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("address of array[%d]: %p\n", i, (array+i));
+	    }
+	    printf("----------------------\n");
+	}
+	
+	void test2()
+	{
+	    int *array = (int*)malloc(3*sizeof(int));
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("address of array[%d]: %p\n", i, (array+i));
+	    }
+	    printf("----------------------\n");
+	    //free(array);
+	}
+	int main(int argc, char const *argv[])
+	{  
+	    test1();
+	    test1();
+	    test2();
+	    test2();
+	    return 0;
+	}
+- Stack: bởi vì bộ nhớ Stack cố định nên nếu chương trình bạn sử dụng quá nhiều bộ nhớ vượt quá khả năng lưu trữ của Stack chắc chắn sẽ xảy ra tình trạng tràn bộ nhớ Stack (Stack overflow), các trường hợp xảy ra như bạn khởi tạo quá nhiều biến cục bộ, hàm đệ quy vô hạn,...
+	```c
+	int foo(int x){
+	    printf("De quy khong gioi han\n");
+	    return foo(x);
+	}
+- Heap: Nếu bạn liên tục cấp phát vùng nhớ mà không giải phóng thì sẽ bị lỗi tràn vùng nhớ Heap (Heap overflow). Nếu bạn khởi tạo một vùng nhớ quá lớn mà vùng nhớ Heap không thể lưu trữ một lần được sẽ bị lỗi khởi tạo vùng nhớ Heap thất bại.
+	```c
+	int *A = (int *)malloc(18446744073709551615)
  </details>
  <details><summary>LESSON 10: LINKED LIST </summary>
   <p>
