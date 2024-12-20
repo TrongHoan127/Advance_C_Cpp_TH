@@ -1485,6 +1485,259 @@ Pointer to pointer:
 	    return size;
 	}
   </details>
+ <details><summary>LESSON 11: STACK AND QUEUE </summary>
+  <p>
+  
+ ## LESSON 11: STACK AND QUEUE
+ ### STACK
+ - Trong ngôn ngữ C, stack (ngăn xếp) là một vùng nhớ được sử dụng để lưu trữ dữ liệu tạm thời trong suốt quá trình thực thi chương trình. Nó đặc biệt quan trọng trong quản lý bộ nhớ, đặc biệt khi làm việc với các hàm, các biến cục bộ, và các đối số của hàm.
+#### Đặc điểm của Stack:
+- Nguyên lý hoạt động (Last In, First Out - LIFO): Stack hoạt động theo nguyên lý LIFO, nghĩa là dữ liệu được lưu vào stack sẽ được lấy ra theo thứ tự ngược lại (mới nhất vào trước, cũ nhất ra trước). Trong thuật ngữ ngăn xếp, hoạt động chèn được gọi là hoạt động PUSH và hoạt động xóa được gọi là hoạt động POP.
+  ![image](https://github.com/user-attachments/assets/c8833a29-ef73-4d44-9667-a1ecf25bf818)
+- Lưu trữ dữ liệu tạm thời: Stack chủ yếu dùng để lưu trữ:
+	- Các biến cục bộ (local variables)
+	- Các tham số (parameters) của hàm
+	- Địa chỉ trả về (return addresses) khi gọi hàm
+- Tự động cấp phát và giải phóng bộ nhớ:
+	- Bộ nhớ trên stack được cấp phát khi một hàm được gọi và giải phóng khi hàm đó hoàn tất.
+	- Vì vậy, stack có tính "tự động" trong việc quản lý bộ nhớ: không cần phải dùng malloc() hay free() như với heap (đống).
+-Hạn chế về kích thước: Kích thước của stack là có hạn và thường nhỏ hơn so với heap. Nếu chương trình sử dụng quá nhiều bộ nhớ trên stack (ví dụ: đệ quy quá sâu), có thể dẫn đến stack overflow.
+#### Các thao tác trên Stack
+- "push" để thêm một phần tử vào đỉnh của stack
+- "pop" để xóa một phần tử ở đỉnh stack.
+- “top” để lấy giá trị của phần tử ở đỉnh stack.
+- Is_Full(): Kiểm tra xem ngăn xếp đã đầy chưa
+- Is_Empty(): Kiểm tra xem ngăn xếp có trống hay không.
+#### Định nghĩa Stack
+	 ```c
+	typedef struct Stack {
+	    int* items; // mảng chứa các giá trị trong ngăn xếp
+	    int size;   // kích thước của mảng đó
+	    int top;   // giá trị của phần tử trên cùng
+	  } Stack;
+ #### Khởi tạo 1 stack
+ 	```c
+	void initialize( Stack *stack, int size) {
+	    stack->items = (int*) malloc(sizeof(int) * size); //cấp phát động 1 mảng chứa các giá trị
+	    stack->size = size; // truyền vào kích thước mong muốn
+	    stack->top = -1; // gắn giá trị trên cùng bằng -1
+	}
+#### Hoạt động Is_Full() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Is_Full( Stack stack) {
+	    return stack.top == stack.size - 1;
+	}
+#### Hoạt động Is_Empty() trong cấu trúc dữ liệu ngăn xếp
+	 ```c
+	int Is_Empty( Stack stack) {
+	    return stack.top == -1;
+	 }
+#### Hoạt động Push() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	void Push( Stack *stack, int value) {
+	    if (!is_full(*stack)) {
+	        stack->items[++stack->top] = value;
+	    } else {
+	        printf("Stack overflow\n");
+	    }
+	}
+#### Hoạt động Pop() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Pop( Stack *stack) {
+	    if (!is_empty(*stack)) {
+	        return stack->items[stack->top--];
+	    } else {
+	        printf("Stack underflow\n");
+	        return -1;
+	    }
+	}
+#### Hoạt động Top() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Top( Stack stack) {
+	    if (!is_empty(stack)) {
+	        return stack.items[stack.top];
+	    } else {
+	        printf("Stack is empty\n");
+	        return -1;
+	    }
+	}
+#### ví dụ
+	```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	typedef struct Stack {
+	    int* items;
+	    int size;
+	    int top;
+	} Stack;
+	
+	void initialize( Stack *stack, int size) {
+	    stack->items = (int*) malloc(sizeof(int) * size);
+	    stack->size = size;
+	    stack->top = -1;
+	}
+	
+	int is_empty( Stack stack) {
+	    return stack.top == -1;
+	}
+	
+	int is_full( Stack stack) {
+	    return stack.top == stack.size - 1;
+	}
+	
+	void push( Stack *stack, int value) {
+	    if (!is_full(*stack)) {
+	        stack->items[++stack->top] = value;
+	    } else {
+	        printf("Stack overflow\n");
+	    }
+	}
+	
+	int pop( Stack *stack) {
+	    if (!is_empty(*stack)) {
+	        return stack->items[stack->top--];
+	    } else {
+	        printf("Stack underflow\n");
+	        return -1;
+	    }
+	}
+	
+	int top( Stack stack) {
+	    if (!is_empty(stack)) {
+	        return stack.items[stack.top];
+	    } else {
+	        printf("Stack is empty\n");
+	        return -1;
+	    }
+	}
+	
+	int main() {
+	    Stack stack1;
+	    initialize(&stack1, 5);
+	
+	
+	    push(&stack1, 10);
+	    push(&stack1, 20);
+	    push(&stack1, 30);
+	    push(&stack1, 40);
+	    push(&stack1, 50);
+	    push(&stack1, 60);
+	
+	    printf("Top element: %d\n", top(stack1));
+	
+	    printf("Pop element: %d\n", pop(&stack1));
+	    printf("Pop element: %d\n", pop(&stack1));
+	
+	    printf("Top element: %d\n", top(stack1));
+	
+	    return 0;
+	}
+ ### QUEUE
+ - Queue (hàng đợi) là một cấu trúc dữ liệu dùng để lưu trữ và quản lý các phần tử theo nguyên lý FIFO (First In, First Out - Vào trước, ra trước). Điều này có nghĩa là phần tử được thêm vào đầu tiên sẽ được lấy ra đầu tiên. Queue thường được sử dụng trong các bài toán yêu cầu xử lý các phần tử theo thứ tự thời gian như trong các hệ thống lên lịch, xử lý sự kiện, hoặc các thuật toán tìm kiếm.
+   ![image](https://github.com/user-attachments/assets/93917cbc-0101-45df-a710-3f3ce897ddae)
+#### Đặc điểm của Queue
+- Chỉ để cập tới Circular queue, ta có hai từ khóa front và rear:
+	- front đại diện cho vị trí của phần tử đầu tiên trong hàng đợi. Đây là phần tử sẽ được lấy ra đầu tiên khi thực hiện thao tác dequeue (lấy phần tử ra).
+	-rear đại diện cho vị trí của phần tử cuối cùng trong hàng đợi. Đây là phần tử cuối cùng được thêm vào khi thực hiện thao tác enqueue (thêm phần tử vào).
+- Khi queue rỗng, front và rear bằng -1.
+- Khi queue đầy, (rear + 1) % size == front.
+- Khi thực hiện dequeue, chỉ số front sẽ được tăng lên để trỏ tới phần tử tiếp theo trong hàng đợi.
+- Khi thực hiện enqueue, rear sẽ được tăng lên để trỏ tới vị trí mới cho phần tử vừa được thêm vào hàng đợi.
+- Nếu hàng đợi đầy, rear sẽ quay vòng theo cơ chế vòng tròn (circular queue), điều này có nghĩa là khi rear đạt tới giới hạn của mảng, nó sẽ quay về 0 để sử dụng lại vị trí cũ chỉ khi có phần tử được dequeue.
+  #### Các thao tác trên Queue
+- enqueue(): Thêm 1 phần tử dữ liệu vào trong hàng đợi
+- dequeue(): Xóa 1 phần tử từ hàng đợi
+- Front(): lấy phần tử ở đầu hàng đợi, mà không xóa phần tử này
+- Is_Full(): Kiểm tra xem hàng đợi đã đầy chưa
+- Is_Empty(): Kiểm tra xem hàng đợi có trống hay không
+  	```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	
+	typedef struct Queue {
+	    int* items;
+	    int size;
+	    int front, rear;
+	} Queue;
+	
+	void initialize(Queue *queue, int size) 
+	{
+	    queue->items = (int*) malloc(sizeof(int)* size);
+	    queue->front = -1;
+	    queue->rear = -1;
+	    queue->size = size;
+	}
+	
+	int is_empty(Queue queue) {
+	    return queue.front == -1;
+	}
+	
+	int is_full(Queue queue) {
+	    return (queue.rear + 1) % queue.size == queue.front;
+	}
+	
+	void enqueue(Queue *queue, int value) {
+	    if (!is_full(*queue)) {
+	        if (is_empty(*queue)) {
+	            queue->front = queue->rear = 0;
+	        } else {
+	            queue->rear = (queue->rear + 1) % queue->size;
+	        }
+	        queue->items[queue->rear] = value;
+	    } else {
+	        printf("Queue overflow\n");
+	    }
+	}
+	
+	int dequeue(Queue *queue) {
+	    if (!is_empty(*queue)) {
+	        int dequeued_value = queue->items[queue->front];
+	        if (queue->front == queue->rear) {
+	            queue->front = queue->rear = -1;
+	        } else {
+	            queue->front = (queue->front + 1) % queue->size;
+	        }
+	        return dequeued_value;
+	    } else {
+	        printf("Queue underflow\n");
+	        return -1;
+	    }
+	}
+	
+	int front(Queue queue) {
+	    if (!is_empty(queue)) {
+	        return queue.items[queue.front];
+	    } else {
+	        printf("Queue is empty\n");
+	        return -1;
+	    }
+	}
+	
+	int main() {
+	    Queue queue;
+	    initialize(&queue, 3);
+	
+	    enqueue(&queue, 10);
+	    enqueue(&queue, 20);
+	    enqueue(&queue, 30);
+	
+	    printf("Front element: %d\n", front(queue));
+	
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	
+	    printf("Front element: %d\n", front(queue));
+	
+	    enqueue(&queue, 40);
+	    enqueue(&queue, 50);
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	    printf("Front element: %d\n", front(queue));
+	
+	    return 0;
+	}
+  </details>
  <details><summary>LESSON 12: BINARY SEARCH - FILE OPERATIONS - CODE STANDARDS </summary>
   <p>
   
@@ -1503,7 +1756,7 @@ Pointer to pointer:
 - Thời gian chạy: Thuật toán tìm kiếm nhị phân có thời gian chạy O(log n), rất nhanh khi so với tìm kiếm tuyến tính O(n), đặc biệt là với các danh sách có kích thước lớn.
 - Yêu cầu: Danh sách phải được sắp xếp (theo thứ tự tăng dần hoặc giảm dần).
 #### Ví dụ tìm kiếm nhị phân
-	```c
+	 ```c
 	#include <stdio.h>
 	#include <stdlib.h>
 	
@@ -1659,3 +1912,5 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 - ab: Mở file với chế độ nối dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử cuối cùng trong file. Nếu file chưa tồn tại thì sẽ tạo một file mới. Nếu không mở được file thì trả về NULL.
 - r+: Mở file với chế độ đọc và ghi file. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 - rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
+</details>
+ 
