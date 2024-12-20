@@ -570,7 +570,138 @@ Pointer to pointer:
 	- Nếu con trỏ bằng NULL, chương trình in ra "Pointer is NULL", ngược lại nếu con trỏ không bằng NULL, chương trình in ra "Pointer is not NULL".
 	- Sử dụng null pointer thường hữu ích để kiểm tra xem một con trỏ đã được khởi tạo và có trỏ đến một vùng nhớ hợp lệ chưa. Tránh dereferencing (sử dụng giá trị mà con trỏ trỏ đến) một null pointer là quan trọng để tránh lỗi chương trình.
 </details>
-   
+<details><summary>LESSON 4: EXTERN - STATIC- VOLATILE</summary>
+  <p>
+  
+ ## LESSON 4: EXTERN - STATIC- VOLATILE
+ ### EXTERN
+ - Khái niệm Extern trong ngôn ngữ lập trình C được sử dụng để thông báo rằng một biến hoặc hàm đã được khai báo ở một nơi khác trong chương trình hoặc trong một file nguồn khác. Điều này giúp chương trình hiểu rằng biến hoặc hàm đã được định nghĩa và sẽ được sử dụng từ một vị trí khác, giúp quản lý sự liên kết giữa các phần khác nhau của chương trình hoặc giữa các file nguồn.
+- Ví dụ:
+ 	 ```c
+	- File main.c
+	#include <stdio.h>
+	int value = 90;
+	extern void display();
+	int main()
+	{
+		printf("hello\n");
+		display();
+	}
+	- File other.c
+	 ```c
+	#include <stdio.h>
+	extern int value;
+	void display()
+	{
+		printf("value: %d\n", value);
+	}
+- Chia sẻ biến và hàm giữa các file nguồn:
+	- Extern cho phép bạn chia sẻ biến và hàm giữa nhiều file nguồn trong một chương trình.
+	- Điều này hữu ích khi bạn muốn tách chương trình thành các phần nhỏ để quản lý dễ dàng hơn.
+- Chia sẻ biến và hàm giữa các module hoặc thư viện:
+	- Extern có thể được sử dụng để kết nối các module hoặc thư viện trong một dự án lớn.
+- Khai báo hàm trong trường hợp định nghĩa sau:
+	- Nếu bạn muốn sử dụng một hàm trước khi nó được định nghĩa trong mã nguồn, bạn có thể sử dụng extern để khai báo hàm.
+- Biến toàn cục giữa các tệp nguồn:
+	- Khi có một biến toàn cục được sử dụng trong nhiều file nguồn, extern giúp các file nguồn biết về sự tồn tại của biến đó.
+- Chia sẻ hằng số giữa các file nguồn:
+  	- Nếu bạn có một hằng số được sử dụng ở nhiều nơi, bạn có thể sử dụng extern để chia sẻ giá trị của hằng số đó giữa các file nguồn.
+### STATIC
+#### Static local vabribles
+- Khi static được sử dụng với local variables (biến cục bộ - khai báo biến trong một hàm), nó giữ giá trị của biến qua các lần gọi hàm và giữ phạm vi của biến chỉ trong hàm đó.
+- -Biến sẽ chỉ được khởi tạo 1 lần duy nhất và tồn tại suốt thời gian chạy chương trình. Giá trị của nó không bị mất đi ngay cả khi kết thúc hàm và và không được khởi tạo lại trong các lần gọi tiếp theo.
+	```c
+	#include <stdio.h>
+	
+	void exampleFunction() {
+	    static int count = 0; 
+	    count++;
+	    printf("Count: %d\n", count);
+	}
+	
+	int main() {
+	    exampleFunction();  // In ra lần 1: 1
+	    exampleFunction();  // In ra lần 2: 2
+	    exampleFunction();  // In ra lần 3: 3
+	    return 0;
+	}
+ - Ứng dụng: Lưu trữ trạng thái giữa các lần gọi hàm: Sử dụng biến static để theo dõi trạng thái trạng thái giữa các lần gọi hàm mà không cần sử dụng biến toàn cục.
+ #### Static global variables
+ - Biến toàn cục tĩnh là các biến được khai báo với từ khóa static ở ngoài tất cả các hàm (tức là trong phạm vi toàn cục của file). Nó có những tính chất đặc biệt như sau: -Phạm vi truy cập chỉ giới hạn trong file: Chỉ có thể truy cập được trong file nơi nó được khai báo, không thể được sử dụng bởi các file khác, ngay cả khi chúng được khai báo là extern. Khác với biến toàn cục không có từ khóa static, có thể được truy cập từ các file khác nếu được khai báo extern.
+ - Thời gian tồn tại: Biến toàn cục tĩnh có thời gian tồn tại từ khi chương trình bắt đầu cho đến khi chương trình kết thúc, tương tự như các biến toàn cục thông thường.
+ - Ví dụ file main.c:
+   ```c
+	#include <stdio.h>
+	extern void display();
+	//extern int s_g_value;      // Không được phép, vì s_g_value là biến toàn cục tĩnh của file other.c!!
+	extern int g_value;
+	int main() {
+	    printf("hello\n");
+	    g_value = 40;
+	    display();
+	return 0;
+	}
+- Ở file other.c:
+  ```c
+	#include <stdio.h>
+	int g_value = 30;
+	static int s_g_value = 20;
+	void display() {
+		printf("static global value: %d\n", s_g_value);
+		printf("global value: %d\n", g_value);
+	}
+ ### VOLATILE
+ - Từ khóa volatile trong ngôn ngữ lập trình C được sử dụng để báo hiệu cho trình biên dịch rằng một biến có thể thay đổi ngẫu nhiên, ngoài sự kiểm soát của chương trình. Việc này ngăn chặn trình biên dịch tối ưu hóa hoặc xóa bỏ các thao tác trên biến đó (do tính năng optimization của compiler), giữ cho các thao tác trên biến được thực hiện như đã được định nghĩa.
+- Volatile đại diện cho các biến có thể thay đổi bất thường mà không thông qua nguồn source code.
+  	```c
+	#include "stm32f10x.h"
+	volatile int i = 0;
+	int a = 100;
+	int main()
+	{
+		
+		while(1)
+		{
+			i = *((int*) 0x20000000);
+			if (i > 0)
+			{
+				break;
+			}
+			
+		}
+		a = 200;
+	}
+ - Trong lập trình nhúng, chúng ta hay gặp đoạn code khi ta khai báo 1 biến đếm count, mỗi khi bấm nút xảy ra ngắt ngoài, chúng ta tăng biến đếm count. Tuy nhiên, khi chúng ta bật tính năng tối ưu code của compiler, nó sẽ hiểu rằng các biến như vậy dường như không thay đổi giá trị bởi phần mềm nên compiler có xu hướng loại bỏ biến count để có thể tối ưu kích cỡ file code chạy được sinh ra.
+### REGISTER
+- Trong ngôn ngữ lập trình C, từ khóa register được sử dụng để chỉ ra ý muốn của lập trình viên rằng một biến được sử dụng thường xuyên và có thể được lưu trữ trong một thanh ghi máy tính, chứ không phải trong bộ nhớ RAM. Việc này nhằm tăng tốc độ truy cập. Tuy nhiên, lưu ý rằng việc sử dụng register chỉ là một đề xuất cho trình biên dịch và không đảm bảo rằng biến sẽ được lưu trữ trong thanh ghi. Trong thực tế, trình biên dịch có thể quyết định không tuân thủ lời đề xuất này.
+  ![image](https://github.com/user-attachments/assets/f2c460ef-9b41-4355-8b3a-940415611fc3)
+- Ví dụ:
+  	```c
+	#include <stdio.h>
+	#include <time.h>
+	
+	int main() {
+	    // Lưu thời điểm bắt đầu
+	    clock_t start_time = clock();
+	
+	    // Đoạn mã của chương trình
+	    for (int i = 0; i < 1000000; ++i) {
+	        // Thực hiện một số công việc bất kỳ
+	    }
+	
+	    // Lưu thời điểm kết thúc
+	    clock_t end_time = clock();
+	
+	    // Tính thời gian chạy bằng miligiây
+	    double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+	
+	    printf("Thoi gian chay cua chuong trinh: %f giay\n", time_taken);
+	
+	    return 0;
+	}
+
+ 
+ </details>
  <details><summary>LESSON 5: GOTO - SETJMP</summary>
   <p>
   
