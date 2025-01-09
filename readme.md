@@ -1984,6 +1984,205 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 - rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 </details>
 
+<details><summary>LESSON 16: OPP </summary>
+  <p>
+
+## LESSON 16: OOP
+### Tính đóng gói
+- Tính đóng gói (Encapsulation) là một trong bốn đặc tính cơ bản của lập trình hướng đối tượng (OOP) trong C++. Tính đóng gói đề cập đến việc gói gọn dữ liệu (thuộc tính) và các phương thức (hàm) liên quan trong một lớp, đồng thời che giấu chi tiết triển khai bên trong lớp đó khỏi bên ngoài. Ẩn đi các property “mật” khỏi người dùng. Và để làm được điều này, ta sẽ khai báo các property ở quyền truy cập private (tức là không thể truy cập trực tiếp tới các property này thông qua object). 
+- Trong trường hợp ta muốn đọc hoặc ghi các property này, thì ta sẽ truy cập gián tiếp thông qua các method ở quyền truy cập public.
+- Getter: Được sử dụng để lấy giá trị của một thuộc tính property.
+- Setter: Được sử dụng để đặt, thay đổi giá trị và kiểm tra tính hợp lệ của property.
+- Lợi ích của tính đóng gói
+	- Bảo vệ dữ liệu: Ngăn chặn việc truy cập và sửa đổi trực tiếp dữ liệu từ bên ngoài lớp.
+	- Kiểm soát truy cập: Cung cấp cơ chế để kiểm soát cách dữ liệu được sử dụng thông qua các phương thức getter và setter.
+	- Tăng tính bảo trì: Dễ dàng thay đổi hoặc nâng cấp mã nguồn bên trong lớp mà không ảnh hưởng đến mã bên ngoài lớp.
+	- Tăng tính tái sử dụng: Lớp được thiết kế rõ ràng, có thể tái sử dụng ở các phần khác của chương trình.
+ - Cách thể hiện tính đóng gói trong C++
+	- Tính đóng gói được thể hiện thông qua các mức truy cập:
+		- private: Thành phần chỉ có thể được truy cập từ bên trong lớp.
+		- protected: Thành phần có thể truy cập từ lớp cơ sở và các lớp dẫn xuất (kế thừa).
+		- public: Thành phần có thể truy cập từ bất kỳ đâu bên ngoài lớp.
+  - ví dụ:
+    
+    ```c
+   	#include <iostream>
+	#include <string>
+	using namespace std;
+	class SinhVien{
+	    private:
+	        string name;
+	        int id;
+	   
+	    public:
+	        // Contructor
+	        SinhVien(){
+	            static int ID = 1;
+	            id = ID;
+	            ID++;
+	        }
+	
+	        // Setter-thêm tên mới
+	        void setName(string newName){   
+	            // Kiểm tra kí tự đặc biệt
+	            name = newName;
+	        }
+	
+	        // Getter-lấy tên sv
+	        string getName(){   
+	            return name;
+	        }
+	
+	        // Getter-lấy id sv
+	        int getID(){
+	            return id;
+	        }
+	
+	        void display(){
+	            cout << "Ten: " << getName() << endl;
+	            cout << "ID: " << getID() << endl;
+	        }
+	};
+	int main(int argc, char const *argv[])
+	{
+	    SinhVien sv1, sv2;
+	
+	    sv1.setName("Trung");
+	    sv1.display();
+	
+	    sv2.setName("Tuan");
+	    sv2.display();
+	
+	    return 0;
+	}
+ - ví dụ 2:
+   	```c
+	#include <iostream>
+	using namespace std;
+	
+	class BankAccount {
+	private:
+	    // Thuộc tính private (chỉ truy cập được bên trong lớp)
+	    string accountHolder;
+	    double balance;
+	
+	public:
+	    // Constructor để khởi tạo tài khoản
+	    BankAccount(string name, double initialBalance) {
+	        accountHolder = name;
+	        if (initialBalance >= 0)
+	            balance = initialBalance;
+	        else
+	            balance = 0;
+	    }
+	
+	    // Getter để lấy thông tin số dư
+	    double getBalance() const {
+	        return balance;
+	    }
+	
+	    // Setter để nạp tiền vào tài khoản
+	    void deposit(double amount) {
+	        if (amount > 0) {
+	            balance += amount;
+	            cout << "Deposit successful. New balance: " << balance << endl;
+	        } else {
+	            cout << "Invalid deposit amount!" << endl;
+	        }
+	    }
+	
+	    // Setter để rút tiền từ tài khoản
+	    void withdraw(double amount) {
+	        if (amount > 0 && amount <= balance) {
+	            balance -= amount;
+	            cout << "Withdrawal successful. New balance: " << balance << endl;
+	        } else {
+	            cout << "Invalid withdrawal amount or insufficient funds!" << endl;
+	        }
+	    	}
+	};
+	int main() {
+	    // Tạo tài khoản ngân hàng
+	    BankAccount account("John Doe", 1000.0);
+	
+	    // Truy cập thông qua các phương thức public
+	    cout << "Initial balance: " << account.getBalance() << endl;
+	
+	    account.deposit(500);   // Nạp tiền
+	    account.withdraw(300);  // Rút tiền
+	
+	    return 0;
+		}
+### Tính kế thừa
+- Tính kế thừa ( Inheritance) là khả năng sử dụng lại các property và method của một class trong một class khác. Ta chia chúng làm 2 loại là class cha và class con. Để kế thừa từ class khác, ta dùng ký tự ":".
+- Có 3 kiểu kế thừa là public, private và protected. Những property và method được kế thừa từ class cha sẽ nằm ở quyền truy cập của class con tương ứng với kiểu kế thừa.
+- Lợi ích của tính kế thừa
+	- Tái sử dụng mã nguồn: Các thuộc tính và phương thức của lớp cha có thể được sử dụng lại bởi lớp con mà không cần viết lại.
+	- Mở rộng tính năng: Lớp con có thể thêm hoặc ghi đè (override) các thuộc tính/phương thức từ lớp cha để cung cấp các chức năng mới.
+	- Tăng tính tổ chức: Tạo mối quan hệ phân cấp rõ ràng giữa các lớp, giúp dễ dàng quản lý và phát triển mã.
+ - Đặc điểm:
+	- Các member public của class cha vẫn sẽ là public trong class con.
+	- Các member protected của class cha vẫn sẽ là protected trong class con.
+	- Các member private của class cha không thể truy cập trực tiếp từ class con nhưng có thể được truy cập gián tiếp qua các phương thức public hoặc protected của class cha
+- Cú pháp:
+	```c
+ 
+	class LớpCha {
+	    // Các thuộc tính và phương thức của lớp cha
+	};
+	
+	class LớpCon : public LớpCha {
+	    // Lớp con thừa hưởng tất cả các thuộc tính và phương thức công khai hoặc được bảo vệ của lớp cha
+	};
+ - ví dụ:
+	```c
+	 #include <iostream>
+	using namespace std;
+	
+	// Class cha
+	class Animal {
+	public:
+	    void eat() {
+	        cout << "Animal is eating" << endl;
+	    }
+	    // public method, truy cập private gián tiếp!
+	    void accessPrivate() {
+	        breathe();
+	    }
+	
+	protected:
+	    void sleep() {
+	        cout << "Animal is sleeping" << endl;
+	    }
+	
+	private:
+	    void breathe() {
+	        cout << "Animal is breathing" << endl;
+	    }
+	};
+	
+	// Class con
+	class Dog : public Animal {
+	public:
+	    void accessProtected() {
+	        // sleep() truy cập thoải mái ở trong class con.
+	        sleep();  
+	    }
+	};
+	
+	int main() {
+	    Dog myDog;
+	    // eat() ở class cha là public ở class con là public, eat() truy cập ở đâu cũng được.
+	    myDog.eat(); 
+	    // sleep() ở class cha là protected ở class con là protected, sleep() truy cập qua phương thức public của class con.
+	    myDog.accessProtected();
+	    // breathe() ở class cha là private, chỉ truy cập gián tiếp qua các phương thức public hoặc protected của class cha.
+	    myDog.accessPrivate();    
+	}
+ 
+
+ </details>
+ 
  <details><summary>LESSON 19: NAMESPACE </summary>
   <p>
   
