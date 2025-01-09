@@ -1913,4 +1913,261 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 - r+: Mở file với chế độ đọc và ghi file. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 - rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 </details>
+
+ <details><summary>LESSON 13: CLASS </summary>
+  <p>
+  
+ ## LESSON 19: NAMESPACE
+### Định nghĩa Namespace
+- Namespace là cách nhóm các định danh như tên biến, hàm, class,... vào một không gian tách biệt.
+- Namespace được sử dụng để tránh xung đột tên khi có các định danh giống nhau được khai báo trong các phần của chương trình hoặc các thư viện khác nhau.
+- Ví dụ cho việc sử dụng namespace tránh xung đột:
+	```c
+	#include <iostream>
+	using namespace std;
+	
+	// Khai báo namespace đầu tiên
+	namespace Math {
+	    int add(int a, int b) {
+	        return a + b;
+	    }
+	}
+	
+	// Khai báo namespace thứ hai
+	namespace Physics {
+	    int add(int a, int b) {
+	        return a + b + 10; // Một phép cộng khác, thêm 10 vào kết quả
+	    }
+	}
+	
+	int main() {
+	    // Gọi hàm add trong namespace Math
+	    int sumMath = Math::add(3, 4); // Kết quả: 7
+	
+	    // Gọi hàm add trong namespace Physics
+	    int sumPhysics = Physics::add(3, 4); // Kết quả: 17
+	
+	    cout << "Tong theo Math::add(3, 4) = " << sumMath << endl;        // In ra 7
+	    cout << "Tong theo Physics::add(3, 4) = " << sumPhysics << endl;  // In ra 17
+	
+	    return 0;
+	}
+ - ví dụ 2:
+	```c
+ 	#include <iostream>
+	using namespace std;
+	namespace A{
+	    char *name = (char*)"Trung 20";
+	
+	    void display(){
+	        cout << "Name: " << name << endl;
+	    }
+	}
+	namespace B{
+	    char *name = (char*)"Trung 21";
+	
+	    void display(){
+	        cout << "Name: " << name << endl;
+	    }
+	}
+	int main(int argc, char const *argv[])
+	{
+	    cout << "Name: " << A::name << endl;
+	    cout << "Name: " << B::name << endl;
+	
+	    A::display();
+	    B::display();
+	    return 0;
+	}
+
+
+
+### Namespace ẩn danh
+- Namespace ẩn danh là một namespace không có tên cụ thể.
+- Sử dụng để giới hạn phạm vi của các hàm, biến, hoặc lớp trong một file cụ thể (tức là các file khác không thể sử dụng được dù có từ khóa extern).
+- Nó tương đương vơi việc sử dụng từ khóa static khai báo toán cục.
+- Giúp tránh xung đột tên khi làm việc với các chương trình lớn hoặc nhiều file.
+- Ví dụ về namespace ẩn danh:
+	```c
+	namespace {
+	    int hiddenVariable = 42;
+	
+	    void hiddenFunction() {
+	        cout << "Hello from an anonymous namespace!" << endl;
+	    }
+	}
+### Từ khóa using
+- Từ khóa using cho phép bạn sử dụng các phần tử trong namespace mà không cần phải sử dụng toán tử '::' mỗi khi truy cập.
+	```c
+	#include <iostream>
+	using namespace std;
+	using namespace Math;  
+	
+	// Khai báo namespace Math
+	namespace Math {
+	    int add(int a, int b) {
+	        return a + b;
+	    }
+	}
+	
+	int main() {
+	    // Gọi hàm add trực tiếp mà không cần Math::
+	    int sumMath = add(3, 4); // Kết quả: 7
+	
+	    cout << "Tong theo add(3, 4) = " << sumMath << endl; // In ra 7
+	
+	    return 0;
+	}
+- Lưu ý: Chỉ sử dụng using namespace khi member muốn truy cập đến là duy nhất(chỉ 1 namespace).
+- Ví dụ về lỗi khí cố sử dụng using namespace cho hai namespace định nghĩa cùng tên thành viên:
+	```c
+	#include <iostream>
+	using namespace std;
+	using namespace Math;
+	using namespace Physics;
+	
+	// Cả hai namespace đều có hàm add()
+	namespace Math {
+	    int add(int a, int b) {
+	        return a + b;
+	    }
+	}
+	
+	namespace Physics {
+	    int add(int a, int b) {
+	        return a + b + 10;
+	    }
+	}
+	
+	int main() {
+	    // Lỗi: add không rõ ràng vì có hai hàm add từ các namespace khác nhau
+	    int result = add(3, 4);
+	    cout << "Kết quả: " << result << endl;
+	    return 0;
+	}
+### Namespace lồng nhau
+- Là một namespace có thể chứa một namespace khác bên trong nó.
+- Ví dụ về namespace lồng nhau:
+	```c
+	#include <iostream>
+	using namespace std;
+	
+	// Khai báo namespace bên ngoài
+	namespace Outer {
+	    void displayOut() {
+	        cout << "Hello from Outer namespace" << endl;
+	    }
+	
+	    // Khai báo namespace bên trong
+	    namespace Inner {
+	        void displayIn() {
+	            cout << "Hello from Inner namespace" << endl;
+	        }
+	    }
+	}
+	
+	int main() {
+	    // Đưa các thành phần của Outer vào phạm vi hiện tại
+	    using namespace Outer;
+	
+	    // Gọi hàm displayOut từ namespace Outer
+	    displayOut(); // Tương đương với Outer::displayOut()
+	    Inner::displayIn();
+	
+	    // Đưa các thành phần của Inner vào phạm vi hiện tại
+	    using namespace Outer::Inner;
+	
+	    // Gọi hàm displayIn từ namespace Inner
+	    displayIn(); // Tương đương với Outer::Inner::displayIn()
+	
+	    return 0;
+	}
+### Namespace mở rộng
+- Namespace mở rộng là tính năng có thể được mở rộng namespace bằng cách khai báo nhiều lần cùng một tên namespace trong các phần khác nhau của chương trình kể cả ở file khác.
+- Các khai báo này sẽ được ghép lại thành một namespace duy nhất cho nên không được định nghĩa trùng trên các thành viên trong namespace.
+- Ví dụ về namespace mở rộng:
+- Ở file mở rộng
+	```c
+	// morong.cpp
+	#include <iostream>
+	using namespace std;
+	
+	// Mở rộng namespace Math để định nghĩa hàm khác
+	namespace Math {
+	    void sum(int a, int b) {
+	        cout << "Sum: " << a + b << endl;
+	    }
+	}
+- Ở file main
+	```c
+	// file main.c
+	#include <iostream>
+	#include "morong.cpp"
+	using namespace std;
+	
+	// Khai báo và định nghĩa hàm trong namespace Math
+	namespace Math {
+	    void subtract(int a, int b) {
+	        cout << "Subtract: " << a - b << endl;
+	    }
+	}
+
+- Tiếp tục mở rộng namespace Math để định nghĩa hàm khác
+	```c
+	namespace Math {
+	    void multiply(int a, int b) {
+	        cout << "Multiply: " << a * b << endl;
+	    }
+	}
  
+	int main() {
+	    // Gọi các hàm trong namespace Math
+	    Math::sum(3, 4);        
+	    Math::multiply(3, 4);   
+	    Math::subtract(5, 3);
+	    return 0;
+	}
+4. Namespace tiêu chuẩn (std) trong C++
+- namespace std cung câp tất cả các thành phần của thư viện chuẩn C++ (như cout, cin, vector, string).
+- Ví dụ sử dụng cout:
+	```c
+	#include <iostream>
+	using std::cout;
+	using std::endl;
+	
+	int main() {
+	    cout << "Hello, World!" << endl;
+	    return 0;
+	}
+ - ví dụ khác:
+   	```c
+	#include <iostream>
+	
+	using namespace std;
+	
+	namespace std{
+	    struct{
+	        int x;
+	        int y;
+	    } point;
+	
+	    void display(){
+	        cout << "x = " << point.x << endl;
+	        cout << "y = " << point.y << endl;
+	    }
+	}
+	
+	int main(int argc, char const *argv[])
+	{
+	    std::cout << "Hello world!" << std::endl;
+	
+	    cout << "Hello world!" << endl;
+	   
+	    std::point.x = 10;
+	    std::point.y = 20;
+	    std::display();
+	
+	    return 0;
+	}
+
+
