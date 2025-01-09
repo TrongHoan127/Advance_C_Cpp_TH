@@ -1737,7 +1737,9 @@ Pointer to pointer:
 	
 	    return 0;
 	}
-  </details>
+
+</details>
+   
  <details><summary>LESSON 12: BINARY SEARCH - FILE OPERATIONS - CODE STANDARDS </summary>
   <p>
   
@@ -1914,7 +1916,7 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 - rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 </details>
 
- <details><summary>LESSON 13: CLASS </summary>
+ <details><summary>LESSON 19: NAMESPACE </summary>
   <p>
   
  ## LESSON 19: NAMESPACE
@@ -2127,7 +2129,7 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	    Math::subtract(5, 3);
 	    return 0;
 	}
-4. Namespace tiêu chuẩn (std) trong C++
+ ### Namespace tiêu chuẩn (std) trong C++
 - namespace std cung câp tất cả các thành phần của thư viện chuẩn C++ (như cout, cin, vector, string).
 - Ví dụ sử dụng cout:
 	```c
@@ -2169,5 +2171,5 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	
 	    return 0;
 	}
-
+</details>
 
