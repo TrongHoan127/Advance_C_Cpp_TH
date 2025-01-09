@@ -2120,11 +2120,11 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	- Tái sử dụng mã nguồn: Các thuộc tính và phương thức của lớp cha có thể được sử dụng lại bởi lớp con mà không cần viết lại.
 	- Mở rộng tính năng: Lớp con có thể thêm hoặc ghi đè (override) các thuộc tính/phương thức từ lớp cha để cung cấp các chức năng mới.
 	- Tăng tính tổ chức: Tạo mối quan hệ phân cấp rõ ràng giữa các lớp, giúp dễ dàng quản lý và phát triển mã.
- - Đặc điểm:
+ #### Đặc điểm của tính kế thừa
 	- Các member public của class cha vẫn sẽ là public trong class con.
 	- Các member protected của class cha vẫn sẽ là protected trong class con.
 	- Các member private của class cha không thể truy cập trực tiếp từ class con nhưng có thể được truy cập gián tiếp qua các phương thức public hoặc protected của class cha
-- Cú pháp:
+#### Cú pháp:
 	```c
  
 	class LớpCha {
@@ -2179,8 +2179,331 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	    // breathe() ở class cha là private, chỉ truy cập gián tiếp qua các phương thức public hoặc protected của class cha.
 	    myDog.accessPrivate();    
 	}
- 
-
+ - ví dụ kế thừa protected và private:
+	```c
+	#include <iostream>
+	#include <string>
+	
+	using namespace std;
+	
+	class DoiTuong{
+	    protected:
+	        string ten;
+	        int id;
+	
+	    public:
+	        DoiTuong(){  
+	            static int ID = 1;
+	            id = ID;
+	            ID++;
+	        }
+	
+	        void setName(string _ten){
+	            // check chuỗi nhập vào
+	            ten = _ten;
+	        }
+	
+	        void display(){
+	            cout << "ten: " << ten << endl;
+	            cout << "id: " << id << endl;
+	        }
+	};
+	
+	class SinhVien : protected DoiTuong{
+	    protected:
+	        string chuyenNganh;
+	
+	    public:
+	        void setChuyenNganh(string _nganh){
+	            chuyenNganh = _nganh;
+	        }
+	
+	        void setNameSV(string _ten){
+	            ten = _ten;
+	        }
+	
+	        void display(){ // override
+	            cout << "ten: " << ten << endl;
+	            cout << "id: " << id << endl;
+	            cout << "chuyen nganh: " << chuyenNganh << endl;
+	        }
+	};
+	
+	int main(int argc, char const *argv[])
+	{
+	    SinhVien sv1;
+	    sv1.setNameSV("Trung");
+	    sv1.setChuyenNganh("TDH");
+	    sv1.display();
+	    return 0;
+	}
+### Ghi đè hàm
+- Ghi đè hàm (Method Overriding) trong lập trình hướng đối tượng (OOP) là một cơ chế cho phép lớp dẫn xuất (lớp con) thay thế hoặc tái định nghĩa một phương thức được kế thừa từ lớp cơ sở (lớp cha). Khi ghi đè, lớp con sẽ cung cấp cách triển khai mới cho phương thức đó, trong khi vẫn giữ cùng tên, kiểu trả về, và tham số.
+#### Đặc điểm của ghi đè hàm
+- Cùng tên, kiểu trả về và tham số: Phương thức ghi đè trong lớp con phải có cùng chữ ký (signature) với phương thức trong lớp cha.
+- Sử dụng từ khóa virtual: Phương thức trong lớp cha cần được khai báo là virtual để hỗ trợ ghi đè.
+- Hỗ trợ tính đa hình: Khi sử dụng con trỏ hoặc tham chiếu đến lớp cha để gọi phương thức, việc thực thi phương thức sẽ dựa vào đối tượng thực tế (runtime).
+- Từ khóa override (tùy chọn): Trong C++11 trở đi, từ khóa override được dùng để chỉ rõ rằng phương thức đang ghi đè một phương thức từ lớp cha.
+#### Cú pháp
+	```c
+		class LớpCha {
+		public:
+		    virtual void phươngThức() {
+		        // Triển khai của lớp cha
+		    }
+		};
+		
+		class LớpCon : public LớpCha {
+		public:
+		    void phươngThức() override {
+		        // Triển khai mới của lớp con
+		    }
+		};
+	- ví dụ:
+		```c
+	 	#include <iostream>
+	using namespace std;
+	
+	class Animal {
+	public:
+	    void sound() {
+	        cout << "Some generic sound" << endl;
+	    }
+	};
+	
+	class Dog : public Animal {
+	public:
+	    // Function overriding
+	    void sound() {
+	        cout << "Woof!" << endl;
+	    }
+	};
+	
+	int main() {
+	    Dog myDog;  
+	    myDog.sound(); 
+	    // Gọi method sound() của Dog, output: "Woof!"
+	}
+- ví dụ 2
+	```c
+	 #include <iostream>
+	using namespace std;
+	
+	// Lớp cha
+	class Animal {
+	public:
+	    virtual void makeSound() const {
+	        cout << "Animal is making a sound." << endl;
+	    }
+	};
+	
+	// Lớp con kế thừa và ghi đè hàm
+	class Dog : public Animal {
+	public:
+	    void makeSound() const override {
+	        cout << "Dog is barking." << endl;
+	    }
+	};
+	
+	// Lớp con khác kế thừa và ghi đè hàm
+	class Cat : public Animal {
+	public:
+	    void makeSound() const override {
+	        cout << "Cat is meowing." << endl;
+	    }
+	};
+	
+	int main() {
+	    Animal* animal1 = new Dog();  // Con trỏ kiểu lớp cha trỏ đến đối tượng lớp con
+	    Animal* animal2 = new Cat();
+	
+	    animal1->makeSound();  // Gọi phương thức của lớp Dog
+	    animal2->makeSound();  // Gọi phương thức của lớp Cat
+	
+	    delete animal1;
+	    delete animal2;
+	
+	    return 0;
+	}
+### Tính đa hình
+- Tính đa hình ( Polymorphism) có nghĩa là "nhiều dạng" và nó xảy ra khi chúng ta có nhiều class có liên quan với nhau thông qua tính kế thừa.
+- Tính đa hình có thể được chia thành hai loại chính:
+	- Đa hình tại thời điểm biên dịch (Compile-time Polymorphism): Thực hiện nhờ cơ chế nạp chồng (overloading).
+		- Nạp chồng hàm (Function Overloading): Nhiều hàm có cùng tên nhưng khác tham số.
+		- Nạp chồng toán tử (Operator Overloading): Thay đổi cách hoạt động của các toán tử.
+	- Đa hình tại thời điểm chạy (Runtime Polymorphism): Thực hiện nhờ cơ chế ghi đè hàm (overriding) và sử dụng con trỏ hoặc tham chiếu.
+		- Được hỗ trợ bởi từ khóa virtual trong C++.
+- Đa hình tại thời điểm biên dịch
+- Ví dụ nạp chồng hàm:
+	```c
+	#include <iostream>
+	using namespace std;
+	
+	class Calculator {
+	public:
+	    int add(int a, int b) {
+	        return a + b;
+	    }
+	
+	    double add(double a, double b) {
+	        return a + b;
+	    }
+	
+	    int add(int a, int b, int c) {
+	        return a + b + c;
+	    }
+	};
+	
+	int main() {
+	    Calculator calc;
+	    cout << "Sum of 2 integers: " << calc.add(5, 10) << endl;
+	    cout << "Sum of 2 doubles: " << calc.add(3.5, 2.5) << endl;
+	    cout << "Sum of 3 integers: " << calc.add(1, 2, 3) << endl;
+	
+	    return 0;
+	}
+- Ví dụ nạp chồng toán tử:
+	```c
+	#include <iostream>
+	using namespace std;
+	
+	class Complex {
+	private:
+	    double real, imag;
+	
+	public:
+	    Complex(double r = 0, double i = 0) : real(r), imag(i) {}
+	
+	    // Nạp chồng toán tử "+"
+	    Complex operator+(const Complex& other) {
+	        return Complex(real + other.real, imag + other.imag);
+	    }
+	
+	    void display() const {
+	        cout << real << " + " << imag << "i" << endl;
+	    }
+	};
+	
+	int main() {
+	    Complex c1(3.5, 2.5), c2(1.5, 4.5);
+	    Complex c3 = c1 + c2; // Sử dụng toán tử "+" đã được nạp chồng
+	    c3.display();
+	    return 0;
+	}
+- Đa hình tại thời điểm chạy
+- Ví dụ ghi đè hàm và đa hình động:
+  	```c
+	#include <iostream>
+	using namespace std;
+	
+	// Lớp cha
+	class Shape {
+	public:
+	    virtual void draw() const {
+	        cout << "Drawing a generic shape." << endl;
+	    }
+	};
+	
+	// Lớp con 1
+	class Circle : public Shape {
+	public:
+	    void draw() const override {
+	        cout << "Drawing a circle." << endl;
+	    }
+	};
+	
+	// Lớp con 2
+	class Rectangle : public Shape {
+	public:
+	    void draw() const override {
+	        cout << "Drawing a rectangle." << endl;
+	    }
+	};
+	
+	int main() {
+	    Shape* shape1 = new Circle();     // Con trỏ kiểu lớp cha trỏ đến lớp con
+	    Shape* shape2 = new Rectangle();
+	
+	    shape1->draw(); // Gọi phương thức của lớp Circle
+	    shape2->draw(); // Gọi phương thức của lớp Rectangle
+	
+	    delete shape1;
+	    delete shape2;
+	
+	    return 0;
+	}
+	- Giải thích ví dụ:
+		- Từ khóa virtual: Cho phép phương thức draw của lớp con được ghi đè.
+		- Đa hình động: Việc gọi phương thức draw phụ thuộc vào đối tượng thực tế (Circle hoặc Rectangle) được con trỏ trỏ tới.
+### Tính trừu tượng
+- Tính trừu tượng đề cập đến việc ẩn đi các chi tiết cụ thể của một đối tượng và chỉ hiển thị những gì cần thiết để sử dụng đối tượng đó.
+- Nó có sự tương đồng với tính đóng gói nhưng tính đóng gói là ẩn đi các property còn tính trừu tượng là ẩn đi các method hay quá trình tính toán.
+  	```c
+	#include <iostream>
+	#include <string>
+	#include <cmath>
+	
+	using namespace std;
+	
+	class GiaiPhuongTrinh{
+	    private:
+	        // Tính đóng gói-ẩn các property	
+	        double a;
+	        double b;
+	        double c;
+	        double x1;
+	        double x2;
+	        double delta;
+	
+	        // Tính trừu tượng-ẩn các method
+	        void tinhNghiem(){	
+	            delta = b*b - 4*a*c;
+	            if (delta < 0){
+	                delta = -1;
+	            }
+	            else if (delta == 0){
+	                x1 = x2 = -b/ (2*a);
+	            }
+	            else if (delta > 0){
+	                x1 = (-b + sqrt(delta))/(2*a);
+	                x2 = (-b - sqrt(delta))/(2*a);
+	            }
+	        }
+	       
+	    public:
+	        // Chỉ show ra phần sử dụng đơn giản cho user
+	        void enterNumber(double num_a, double num_b, double num_c);
+	        void printResult();
+	
+	};
+	
+	void GiaiPhuongTrinh::enterNumber(double num_a, double num_b, double num_c){
+	    a = num_a;
+	    b = num_b;
+	    c = num_c;
+	}
+	
+	void GiaiPhuongTrinh::printResult(){
+	    tinhNghiem();
+	    if (delta == -1){
+	        cout << "PT vo nghiem" << endl;
+	    }
+	    else if (delta == 0){
+	        cout << "PT co nghiem chung: " << x1 << endl;
+	    }
+	    else if (delta > 0){
+	        cout << "PT co 2 nghiem: \n";
+	        cout << "x1: " << x1 << endl;
+	        cout << "x2: " << x2 << endl;
+	    }
+	}
+	int main()
+	{
+	  GiaiPhuongTrinh phuongtrinh1;
+	  phuongtrinh1.enterNumber(1,5,4);
+	  phuongtrinh1.printResult();
+	  return 0;
+	}
  </details>
  
  <details><summary>LESSON 19: NAMESPACE </summary>
