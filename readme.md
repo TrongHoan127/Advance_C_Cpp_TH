@@ -793,6 +793,74 @@ Pointer to pointer:
 	Điều khiển quay lại từ longjmp.
 </details>
 
+<details><summary>LESSON 6: BITMASK </summary>
+
+ <p>
+	 
+## BITMASK
+### Khái niệm bitmask
+- Bitmask là một kỹ thuật sử dụng các bit để lưu trữ và thao tác với các cờ (flags) hoặc trạng thái. Có thể sử dụng bitmask để đặt, xóa và kiểm tra trạng thái của các bit cụ thể trong một từ (word).
+- Bitmask thường được sử dụng để tối ưu hóa bộ nhớ, thực hiện các phép toán logic trên một cụm bit, và quản lý các trạng thái, quyền truy cập, hoặc các thuộc tính khác của một đối tượng.
+- Thay vì sử dụng một biến riêng cho mỗi cờ (flag), bạn có thể sử dụng bitmask để lưu trữ nhiều giá trị nhị phân (on/off, true/false).
+	```c
+ 	uint8_t bitmask = 0b10101010;
+- Giả sử ta có một dãy bitmask 8 bit (1 byte) để lưu trữ trạng thái của 8 thiết bị khác nhau. Mỗi thiết bị có thể ở trạng thái bật (1) hoặc tắt (0).
+![image](https://github.com/user-attachments/assets/b1dc5d6c-e078-4548-8130-9b6d8938fd3d)
+### Các toán tử bitwise
+- NOT bitwise
+	- int result = ~num ;
+	- Kết quả là bit đảo ngược của số đó.
+- AND bitwise
+	- int result = num1 & num2;
+	- Kết quả là 1 nếu cả hai bit tương ứng đều là 1, ngược lại là 0.
+- OR bitwise
+	- int result = num1 | num2;
+	-Kết quả là 1 nếu có hơn một bit tương ứng là 1
+- XOR bitwise
+   	- int result = num1 ^ num2;
+	- Kết quả là 1 nếu chỉ có một bit tương ứng là 1
+
+- Shift left và Shift right bitwise
+	- Dùng để di chuyển bit sang trái hoặc sang phải.
+	- Trong trường hợp <<, các bit ở bên phải sẽ được dịch sang trái, và các bit trái cùng sẽ được đặt giá trị 0.
+	- Trong trường hợp >>, các bit ở bên trái sẽ được dịch sang phải, và các bit phải cùng sẽ được đặt giá trị 0 hoặc 1 tùy thuộc vào giá trị của bit cao nhất (bit dấu).
+	- int resultLeftShift = num << shiftAmount;
+	- int resultRightShift = num >> shiftAmount;
+- ví dụ:
+  ```c
+	#include <stdio.h>
+	#include <stdint.h>
+	
+	#define ENABLE 1
+	#define DISABLE 0
+	
+	typedef struct {
+	    uint8_t LED1 : 1;
+	    uint8_t LED2 : 1;
+	    uint8_t LED3 : 1;
+	    uint8_t LED4 : 1;
+	    uint8_t LED5 : 1;
+	    uint8_t LED6 : 1;
+	    uint8_t LED7 : 1;
+	    uint8_t LED8 : 1;
+	} LEDStatus;
+	void displayAllStatusLed(LEDStatus status) {
+	 	uint8_t* statusPtr = (uint8_t*)&status;
+			for (int j = 0; j < 8; j++) {
+			printf("LED%d: %d\n", j+1, (*statusPtr >> j) & 1);
+	}
+	}
+	int main() {
+	    LEDStatus ledStatus = {.LED7 = ENABLE};
+	
+	    // Bật LED 1 và 3
+	    ledStatus.LED1 = ENABLE;
+	    ledStatus.LED3 = ENABLE;
+	    displayAllStatusLed(ledStatus);
+		
+	    return 0;
+	}
+</details>
    <details><summary>LESSON 7: STRUCT - UNION </summary>
   <p>
   
