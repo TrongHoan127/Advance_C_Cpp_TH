@@ -1983,7 +1983,488 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 - r+: Mở file với chế độ đọc và ghi file. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 - rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
 </details>
+<details><summary>LESSON 13: CLASS </summary>
+  <p>
+  
+ ## LESSON 13:CLASS
+ ### Định nghĩa Class
+ - Trong C++, từ khóa "class" được sử dụng để định nghĩa một lớp, là một cấu trúc dữ liệu tự định nghĩa có thể chứa dữ liệu và các hàm thành viên liên quan. 
+ 	```cpp
+  	class ClassName {
+	private:
+	    // Các thành phần riêng tư (private) chỉ có thể truy cập bên trong lớp
+	    // Dữ liệu thành viên, hàm thành viên, ...
+	
+	protected:
+	    // Các thành phần bảo vệ (protected) tương tự như private, nhưng có thể truy cập từ lớp kế thừa
+	
+	public:
+	    // Các thành phần công khai (public) được truy cập từ bên ngoài lớp
+	    // Dữ liệu thành viên, hàm thành viên, ...
+	    // Hàm thành viên và các phương thức khác có thể được định nghĩa tại đây
+	    // ...
+    	 };
+- Các hàm trong Class được gọi là phương thức, các biến thì được gọi là thuộc tính. Các phương thức và thuộc tính có các mức độ triển khai khác nhau như:
+	- Public: Các hàm khác có thể truy cập được các phương thức, thuộc tính từ bên ngoài lớp.
+	- Private: Chỉ có khả năng truy cập từ bên trong lớp, bên ngoài muốn truy cập thì phải gián tiếp thông qua các hàm get, set.
+	- Protected: Truy cập cục bộ trong Class hoặc các Class kế thừa. Các cách triển khai này nhằm mục đích đảm báo tính bảo mật cho các thuộc tính, phương thức trong Class bằng cách hạn chế quyền truy cập từ bên ngoài.
+	
+- ví dụ:
+	```cpp
+ 	#include <iostream>
+	using namespace std;
+	
+	class TenLop {
+	private:
+	    // Các thuộc tính riêng tư
+	    int thuocTinh1;
+	    int thuocTinh2;
+	
+	public:
+	    // Constructor
+	    TenLop(int thamSo1, int thamSo2) {
+	        thuocTinh1 = thamSo1;
+	        thuocTinh2 = thamSo2;
+	    }
+	
+	    // Phương thức để thiết lập giá trị
+	    void setThuocTinh1(int giaTri) {
+	        thuocTinh1 = giaTri;
+	    }
+	
+	    void setThuocTinh2(int giaTri) {
+	        thuocTinh2 = giaTri;
+	    }
+	
+	    // Phương thức để lấy giá trị
+	    int getThuocTinh1() {
+	        return thuocTinh1;
+	    }
+	
+	    int getThuocTinh2() {
+	        return thuocTinh2;
+	    }
+	
+	    // Phương thức hiển thị thông tin
+	    void hienThi() {
+	        cout << "Thuoc tinh 1: " << thuocTinh1 << ", Thuoc tinh 2: " << thuocTinh2 << endl;
+	    }
+	};
+	
+	int main() {
+	    // Tạo một đối tượng từ lớp TenLop
+	    TenLop doiTuong(10, 20);
+	
+	    // Gọi phương thức của đối tượng
+	    doiTuong.hienThi();
+	
+	    // Thay đổi giá trị thuộc tính và hiển thị lại
+	    doiTuong.setThuocTinh1(30);
+	    doiTuong.setThuocTinh2(40);
+	    doiTuong.hienThi();
+	
+	    return 0;
+	}
+ 	- class TenLop: Khai báo một lớp với tên là TenLop.
+	- Thuộc tính (thuocTinh1, thuocTinh2): Được khai báo trong phần private, nghĩa là chỉ có thể truy cập thông qua các phương thức của lớp.
+	- Phương thức (setThuocTinh1, getThuocTinh1, hienThi): Được khai báo trong phần public, nghĩa là có thể truy cập từ bên ngoài lớp.
+	- Constructor: Phương thức đặc biệt có cùng tên với lớp, được gọi khi một đối tượng của lớp được tạo ra để khởi tạo giá trị ban đầu cho các thuộc tính.
+ ### Các cách thức truy tập thuộc tính và phương thức trong class
+ #### Truy cập thuộc tính và phương thức kiểu công khai
+ - Để truy cập một thuộc tính thuộc kiểu Public:
+	```cpp
+		// Tạo một đối tượng từ lớp TenLop
+		    TenLop doiTuong(10, 20);
+		
+		    // Gọi phương thức của đối tượng
+		    doiTuong.hienThi();
+		
+		    // Thay đổi giá trị thuộc tính và hiển thị lại
+		    doiTuong.setThuocTinh1(30);
+		    doiTuong.setThuocTinh2(40);
+- Ta sẽ trực tiếp lấy giá trị của thuộc tính đó thông qua cú pháp tenClass.tenThuocTinh
+- Tương tự với các phương thức được gọi cũng có cú pháp tenClass.tenPhuongThuc()
+#### Truy cập thuộc tính và phương thức kiểu riêng tư
+	```cpp
+ 
+ 	private:
+	// Các thuộc tính riêng tư
+	int thuocTinh1;
+	int thuocTinh2;
+- Các thuộc tính và phương thức private không thể được truy cập trực tiếp từ bên ngoài lớp. Phải sử dụng các phương thức công khai(các method public) để truy cập hoặc thay đổi giá trị.
+- ví dụ:
+  	```cpp
+  	 #include <iostream>
+	using namespace std;
+	
+	class Person {
+	private:
+	    string name;
+	    int age;
+	
+	public:
+	    // Setter cho thuộc tính name
+	    void setName(string n) {
+	        name = n;
+	    }
+	
+	    // Getter cho thuộc tính name
+	    string getName() {
+	        return name;
+	    }
+	
+	    // Setter cho thuộc tính age
+	    void setAge(int a) {
+	        if (a >= 0) {
+	            age = a;
+	        } else {
+	            cout << "Invalid age!" << endl;
+	        }
+	    }
+	
+	    // Getter cho thuộc tính age
+	    int getAge() {
+	        return age;
+	    }
+	};
+	
+	int main() {
+	    Person p;
+	
+	    p.setName("Alice");
+	    p.setAge(20);
+	
+	    cout << "Name: " << p.getName() << ", Age: " << p.getAge() << endl;
+	
+	    return 0;
+	}
+#### Truy cập thuộc tính và phương thức thông qua con trỏ
+-  ta sẽ tạo một đối tượng tên Test1 và tạo một đối tượng con trỏ ptr trỏ đến Test1. Khi đó để truy cập các thuộc tính của Test1 thông qua ptr ta phải thay dấu . thành ->
+	```cpp
+	#include <iostream>
+	using namespace std;
+	
+	class Test {
+	public:
+	    int value;
+	
+	    void display() {
+	        cout << "Giá trị của Value: " << value << endl;
+	    }
+	};
+	
+	int main() {
+	    Test Test1;
+	    Test* ptr = &Test1;  // Tạo con trỏ trỏ đến object Test1
+	
+	    ptr->value = 100;  // Thay đổi giá trị thuộc tính thông qua con trỏ
+	
+	    ptr->display();  // Gọi phương thức in ra giá trị value thông qua con trỏ
+	
+	    return 0;
+	}
 
+  ### Constructor
+-  Constructor trong C++ là một method sẽ được tự động gọi khi khởi tạo object. Constructor sẽ có tên trùng với tên của class. Mục đích chính của constructor là khởi tạo giá trị ban đầu cho các thuộc tính của đối tượng hoặc thực hiện các thao tác thiết lập cần thiết.
+#### Đặc điểm
+- Tên Method trùng tên Class: Constructor có tên giống với tên lớp.
+- Không có kiểu trả về: Constructor không có kiểu trả về, kể cả void.
+- Tự động được gọi: Khi một đối tượng được tạo, constructor sẽ tự động được gọi mà không cần gọi trực tiếp.
+- Có thể có tham số: Constructor có thể nhận tham số để khởi tạo giá trị cho các thuộc tính.
+#### Cú pháp Constructor
+- ví dụ:
+	```cpp
+
+	class ClassName {
+	public:
+	    ClassName(); // Constructor không tham số
+	    ClassName(int x, int y); // Constructor có tham số
+	};
+#### Constructor không có tham số
+- ví dụ 1:
+	```cpp
+
+	#include <iostream>
+	using namespace std;
+	
+	class Person {
+	private:
+	    string name;
+	
+	public:
+	    // Constructor không tham số
+	    Person() {
+	        name = "Unknown";
+	        cout << "Constructor is called!" << endl;
+	    }
+	
+	    void display() {
+	        cout << "Name: " << name << endl;
+	    }
+	};
+	
+	int main() {
+	    Person p; // Gọi constructor tự động
+	    p.display();
+	    return 0;
+	}
+- Kết quả:
+  	```cpp
+	Constructor is called!
+	Name: Unknown
+#### Constructor có tham số
+- ví dụ 2:
+	```cpp
+	#include <iostream>
+	using namespace std;
+	
+	class Person {
+	private:
+	    string name;
+	    int age;
+	
+	public:
+	    // Constructor có tham số
+	    Person(string n, int a) {
+	        name = n;
+	        age = a;
+	    }
+	
+	    void display() {
+	        cout << "Name: " << name << ", Age: " << age << endl;
+	    }
+	};
+	
+	int main() {
+	    Person p("Alice", 25); // Truyền tham số cho constructor
+	    p.display();
+	
+	    return 0;
+	}
+- Kết quả:
+	Name: Alice, Age: 25
+#### Constructor mặc định và overloading constructor
+- ví dụ 3:
+	```cpp
+
+	#include <iostream>
+	using namespace std;
+	
+	class Rectangle {
+	private:
+	    int width, height;
+	
+	public:
+	    // Constructor không tham số
+	    Rectangle() {
+	        width = height = 0;
+	    }
+	
+	    // Constructor có tham số
+	    Rectangle(int w, int h) {
+	        width = w;
+	        height = h;
+	    }
+	
+	    int getArea() {
+	        return width * height;
+	 }
+	};
+	
+	int main() {
+	    Rectangle rect1; // Gọi constructor không tham số
+	    Rectangle rect2(5, 10); // Gọi constructor có tham số
+	
+	    cout << "Area of rect1: " << rect1.getArea() << endl;
+	    cout << "Area of rect2: " << rect2.getArea() << endl;
+	
+	    return 0;
+	}
+- Kết quả:
+  	```cpp
+	Area of rect1: 0
+	Area of rect2: 50
+### Destructor
+- Destructor là một phương thức đặc biệt của lớp, được gọi tự động khi đối tượng của lớp đó bị hủy (ra khỏi phạm vi hoạt động hoặc chương trình kết thúc). Destructor thường được sử dụng để giải phóng tài nguyên như bộ nhớ động, đóng file hoặc dọn dẹp các thao tác khác.
+#### Đặc điểm
+- Tên giống với tên lớp, nhưng có thêm dấu ~ ở đầu: Destructor có tên giống với tên lớp nhưng có dấu ~ đứng trước (ví dụ, nếu tên lớp là MyClass, destructor sẽ có tên là ~MyClass).
+- Không có tham số: Destructor không nhận tham số nào.
+- Không có kiểu trả về: Destructor không có kiểu trả về, kể cả void.
+- Tự động được gọi: Destructor được tự động gọi khi:
+	- Đối tượng đi ra khỏi phạm vi (scope).
+	- Đối tượng bị xóa bằng từ khóa delete.
+	- Chương trình kết thúc.
+ #### Cú pháp
+ - Cú pháp:
+ 	```cpp
+	 class ClassName {
+	public:
+	    ~ClassName();  // Destructor có dấu ~ đứng trước tên lớp
+	};
+- Ví dụ 1: Destructor đơn giản
+	```cpp
+
+	#include <iostream>
+	using namespace std;
+	
+	class Demo {
+	public:
+	    Demo() {
+	        cout << "Constructor called!" << endl;
+	    }
+	
+	    ~Demo() {
+	        cout << "Destructor called!" << endl;
+	    }
+	};
+	
+	int main() {
+	    Demo obj;
+	    cout << "Inside main function." << endl;
+	
+	    return 0;
+	}
+- Kết quả:
+
+	```cpp
+	Constructor called!
+	Inside main function.
+	Destructor called!
+ - ví dụ 2: Destructor giải phóng bộ nhớ động
+   	```cpp
+	 #include <iostream>
+	using namespace std;
+	
+	class Array {
+	private:
+	    int* data;
+	    int size;
+	
+	public:
+	    // Constructor cấp phát bộ nhớ
+	    Array(int s) {
+	        size = s;
+	        data = new int[size];
+	        cout << "Memory allocated for array of size " << size << endl;
+	    }
+	
+	    // Destructor giải phóng bộ nhớ
+	    ~Array() {
+	        delete[] data;
+	        cout << "Memory deallocated!" << endl;
+	    }
+	
+	    void setValue(int index, int value) {
+	        if (index >= 0 && index < size) {
+	            data[index] = value;
+	        }
+	    }
+	
+	    int getValue(int index) {
+	        if (index >= 0 && index < size) {
+	            return data[index];
+	        }
+	        return -1;
+	    }
+	};
+	
+	int main() {
+	    Array arr(5);
+	    arr.setValue(0, 42);
+	    cout << "Value at index 0: " << arr.getValue(0) << endl;
+	
+	    return 0;
+	}
+- Kết quả:
+	```cpp
+	Memory allocated for array of size 5
+	Value at index 0: 42
+	Memory deallocated!
+ ### Static 
+ #### Static Property
+ - Static property (thuộc tính tĩnh) là một thuộc tính dùng chung cho tất cả các đối tượng của lớp. Thay vì mỗi đối tượng có một bản sao riêng của thuộc tính đó, các đối tượng sẽ chia sẻ một bản sao duy nhất.
+- Đặc điểm:
+	- Khi một property trong class được khai báo với từ khóa static, thì tất cả các object sẽ dùng chung địa chỉ của property này.
+	- Các đối tượng sử dụng dung một địa chỉ của thuộc tính, nên thuộc tính này có giá trị như nhau với các đối tượng khác nhau
+	- Cần phải khởi tạo bên ngoài Class, khởi tạo toàn cục, cấp phát địa chỉ cho biến static trước khi khởi tạo object
+	- Bạn có thể truy cập static property bằng cách sử dụng tên class hoặc thông qua một đối tượng của class
+	- Truy cập: Có thể truy cập staticVar bằng cách dùng MyClass::staticVar hoặc obj.staticVar.
+- Lưu ý:
+	- Static property không thể được khởi tạo trực tiếp bên trong class (trừ khi là const static).
+	- Nếu cần các phép toán phức tạp cho việc khởi tạo, bạn có thể sử dụng một hàm static hoặc một khối static trong file định nghĩa.
+- Ví dụ:
+  	```cpp
+	#include <iostream>
+	using namespace std;
+	
+	class Counter {
+	public:
+	    static int count;  // Khai báo static property
+	
+	    Counter() {
+	        count++;  // Tăng giá trị thuộc tính tĩnh mỗi khi tạo đối tượng
+	    }
+	
+	    static void showCount() {
+	        cout << "Current count: " << count << endl;
+	    }
+	};
+	
+	// Định nghĩa và khởi tạo static property bên ngoài lớp
+	int Counter::count = 0;
+	
+	int main() {
+	    Counter c1, c2;
+	    Counter::showCount();  // Truy cập thuộc tính tĩnh qua tên lớp
+	
+	    return 0;
+	}
+- Kết quả:
+	```cpp
+	Current count: 2
+- Giải thích
+	- Counter::count = 0; là phần định nghĩa thuộc tính tĩnh bên ngoài lớp.
+	- Mỗi khi tạo một đối tượng của lớp Counter, giá trị count tăng thêm 1.
+	- Counter::showCount() truy cập vào thuộc tính tĩnh mà không cần thông qua bất kỳ đối tượng nào.
+ #### Static method
+ - Static method (phương thức tĩnh) trong C++ là một hàm thành viên của class nhưng không hoạt động trên instance cụ thể nào của class. Thay vào đó, nó thuộc về class và có thể được gọi mà không cần tạo instance của class.
+- Đặc điểm của Static Method:
+	- Không cần instance: Static method có thể được gọi trực tiếp thông qua tên class mà không cần tạo object.( các method còn lại của class phải truy cập thông qua object)
+	- Không thể truy cập non-static members: Static method không thể trực tiếp truy cập các thuộc tính hoặc phương thức không static của class, vì chúng không có ngữ cảnh (context) của một instance cụ thể.
+	-Có thể truy cập static members: Static method có thể truy cập các thuộc tính và phương thức static khác của class.
+- ví dụ:
+  	```cpp
+	   class MyClass {
+	public:
+	    static void staticMethod() {
+	        std::cout << "Static method called" << std::endl;
+	    }
+	
+	    static int staticVar;
+	
+	    static void setStaticVar(int value) {
+	        staticVar = value;
+	    }
+	
+	    static int getStaticVar() {
+	        return staticVar;
+	    }
+	};
+	
+	// Định nghĩa và khởi tạo static property
+	int MyClass::staticVar = 0;
+	
+	int main() {
+	    // Gọi static method trực tiếp thông qua class
+	    MyClass::staticMethod();
+	
+	    // Gọi static method để thay đổi static property
+	    MyClass::setStaticVar(10);
+	    std::cout << "StaticVar: " << MyClass::getStaticVar() << std::endl;
+	
+	    return 0;
+	}
+ </details>
 <details><summary>LESSON 16: OPP </summary>
   <p>
 
