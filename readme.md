@@ -2465,6 +2465,52 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	    return 0;
 	}
  </details>
+  <details><summary>LESSON 14: AUTOSAR CLASSIC  </summary>
+  <p>
+	  
+ ## LESSON 14: AUTOSAR CLASSIC
+ ### Khái niệm
+- AUTOSAR (AUTomotive Open System ARchitecture) Classic Platform là một tiêu chuẩn kiến trúc phần mềm dành cho hệ thống nhúng trên ô tô, đặc biệt tập trung vào các hệ thống điều khiển thời gian thực và an toàn chức năng. Đây là nền tảng truyền thống của AUTOSAR, phù hợp với các ECU (Electronic Control Unit) có tài nguyên hạn chế nhưng yêu cầu hiệu suất cao.
+### Lí do cần có Autosar classic
+- Automotive là một hệ thống phức tạp bao gồm nhiều hệ thống nhỏ hơn gọi là ECUs - Electronic Control Unit, nên việc bảo trì và phát triển phần mềm cho từng ECU là việc không dễ. Độ phức tạp càng tăng thêm khi các ECU khác nhau sử dụng các MCU khác nhau để đáp ứng các yêu cầu về mặt ứng dụng và chi phí. Vì vậy, có thể chúng ta sẽ cần phát triển rất nhiều phần mềm khác nhau cho các MCU này.
+- Với cách viết phần mềm thông thường, để giao tiếp giữa nhiều ECU khác nhau, nhà phát triển sẽ cần tạo ra các giao thức, tiêu chuẩn giao tiếp, gọi là Custom standard. Việc này rất tốt, nhưng lần sau làm việc với chiếc xe khác, các ECU khác thì lại rất khó để maintain và tốn nhiều chi phí hơn.
+- Một chiếc ô tô có nhiều bộ phận được sản xuất bởi các công ty khác nhau được gọi là công ty tier 1, cung cấp phụ tùng cho các OEM như BMW, Volkswagen, ... Ngày nay, hầu hết các bộ phận cơ khí đều trở nên thông minh hơn bằng cách thêm các ECU vào. Vì vậy cũng cần có các tiêu chuẩn để giao tiếp với cả những ECU của OEM khác nhau này.
+    ⏩ Với những lý do nêu trên, cần có một số tiêu chuẩn thiết kế phần mềm để có thể thống nhất việc phát triển và giao tiếp giữa các ECU khác nhau, của các OEM khác nhau. Và AUTOSAR sinh ra từ đây để giải quyết những vấn đề trên.
+### Lợi ích của Autosar classic 
+##### 1. Chuẩn hóa và tái sử dụng phần mềm 🔄
+- Trước AUTOSAR: Mỗi nhà sản xuất ô tô (OEM) và nhà cung cấp (Tier-1) tự phát triển phần mềm cho từng loại ECU, gây khó khăn trong việc tích hợp và bảo trì.
+- Với AUTOSAR: Các thành phần phần mềm (Software Components - SWC) được chuẩn hóa, có thể tái sử dụng trên nhiều dòng xe và ECU khác nhau, giúp tiết kiệm chi phí và thời gian phát triển.
+##### 2. Tương thích giữa các nhà cung cấp khác nhau 🌍
+- AUTOSAR tạo ra một giao diện chung giữa các thành phần phần mềm, giúp OEM dễ dàng tích hợp phần mềm từ nhiều nhà cung cấp mà không lo vấn đề tương thích.
+- Các nhà cung cấp phần mềm, phần cứng và công cụ phát triển có thể hợp tác dễ dàng hơn.
+##### 3. Hỗ trợ đa dạng giao thức truyền thông 📡
+- AUTOSAR Classic hỗ trợ nhiều giao thức truyền thông phổ biến trong ô tô như:
+	✅ CAN (Controller Area Network)
+	✅ LIN (Local Interconnect Network)
+	✅ FlexRay
+	✅ Ethernet
+-> Điều này giúp hệ thống có thể giao tiếp dễ dàng giữa các ECU mà không cần phải thay đổi nhiều về phần mềm.
+##### 4. Đảm bảo an toàn và bảo mật 🔐
+- AUTOSAR tuân thủ tiêu chuẩn ISO 26262 về An toàn chức năng trong ô tô, giúp đảm bảo hệ thống không gây nguy hiểm trong trường hợp lỗi xảy ra.
+- Các cơ chế bảo mật như mã hóa dữ liệu, phát hiện xâm nhập giúp bảo vệ hệ thống khỏi các cuộc tấn công mạng.
+##### 5. Hỗ trợ hệ thống thời gian thực (Real-Time) ⏱️
+- AUTOSAR Classic được thiết kế để hoạt động trên các hệ thống thời gian thực cứng (Hard Real-Time), yêu cầu độ chính xác cao.
+- Phù hợp với các hệ thống điều khiển quan trọng như: Hệ thống phanh ABS/ Hộp số tự động/✅ Điều khiển động cơ (ECU Engine Control Unit)
+##### 6. Giảm chi phí và thời gian phát triển ⏳💰
+- Nhờ tính mô-đun và tiêu chuẩn hóa, các nhà phát triển không cần viết lại phần mềm từ đầu mỗi khi có thay đổi phần cứng hoặc tính năng mới.
+- Dễ dàng bảo trì và nâng cấp hệ thống khi có công nghệ mới mà không phải sửa đổi toàn bộ phần mềm.
+##### 7. Tích hợp dễ dàng với các công cụ phát triển 🛠️
+- AUTOSAR Classic được hỗ trợ bởi nhiều công cụ phát triển mạnh mẽ như Vector, Elektrobit, dSPACE, ETAS, giúp việc thiết kế, kiểm thử và triển khai trở nên dễ dàng hơn.
+- Hỗ trợ các hệ điều hành thời gian thực (RTOS) như OSEK, Tresos, PikeOS,...
+![image](https://github.com/user-attachments/assets/b78d3f56-f746-44b6-a81c-84f04ff51555)
+### Kiến trúc
+![image](https://github.com/user-attachments/assets/59eb35c7-e564-4413-886d-80effbec2132)
+- Kiến trúc phân lớp của AUTOSAR:
+	- Application Layer: Bao gồm các thành phần phần mềm ứng dụng, thực hiện các chức năng cụ thể của xe (như kiểm soát động cơ, phanh, v.v).
+	- Runtime Environment (RTE): Là lớp trung gian giữa phần mềm ứng dụng và phần mềm cơ bản, giúp phần mềm ứng dụng có thể giao tiếp với nhau một cách chuẩn hóa (liên kết SWC và BSW).
+	- Basic Software (BSW): Là phần mềm cơ bản, bao gồm các thành phần phần mềm tiêu chuẩn để quản lý các chức năng hệ thống, giao tiếp và điều khiển phần cứng.
+
+ </details>
 <details><summary>LESSON 16: OPP </summary>
   <p>
 
@@ -2986,7 +3032,7 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	  return 0;
 	}
  </details>
- 
+
  <details><summary>LESSON 19: NAMESPACE </summary>
   <p>
   
