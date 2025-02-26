@@ -2509,8 +2509,31 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	- Application Layer: Bao gồm các thành phần phần mềm ứng dụng, thực hiện các chức năng cụ thể của xe (như kiểm soát động cơ, phanh, v.v).
 	- Runtime Environment (RTE): Là lớp trung gian giữa phần mềm ứng dụng và phần mềm cơ bản, giúp phần mềm ứng dụng có thể giao tiếp với nhau một cách chuẩn hóa (liên kết SWC và BSW).
 	- Basic Software (BSW): Là phần mềm cơ bản, bao gồm các thành phần phần mềm tiêu chuẩn để quản lý các chức năng hệ thống, giao tiếp và điều khiển phần cứng.
+#### Application layer
+- Bao gồm nhiều khối phần mềm ứng dụng (Software Component - SWC). Mỗi SWC thực hiện 1 chức năng cụ thể trong hệ thống ECU. 
+- SWC chỉ quan tâm đến logic (tính toán số học, khởi động thế nào), không cần quan tâm đến phần cứng. Tuy nhiên, SWC vẫn có thể giao tiếp với nhau và giao tiếp với phần cứng thông qua RTE.
+![image](https://github.com/user-attachments/assets/cb2577eb-68c0-4584-b6fb-8ef8a77fe281)
+#### Runtime Environment (RTE)
+- RTE đóng vai trò quan trọng trong việc kết nối Software Components (SWC) và Basic Software (BSW) thông qua một kiến trúc trừu tượng.
+- Một số chức năng của RTE:
+	- Truyền thông tin giữa các SWCs: RTE cung cấp cơ chế truyền thông để các thành phần phần mềm (SWCs) có thể trao đổi dữ liệu hoặc gọi dịch vụ với nhau mà không cần biết chi tiết về các phần còn lại của hệ thống. 
+	- Kết nối với BSW: RTE cung cấp giao diện để các SWCs có thể tương tác với BSW. Điều này giúp các SWCs có thể sử dụng các dịch vụ hoặc điều khiển phần cứng một cách dễ dàng.
+	- Hỗ trợ việc lập lịch và điều phối thực thi của các SWCs theo các sự kiện hoặc chu kỳ định sẵn. 
+#### Basic Software (BSW)
+- Basic Software (BSW) là một trong ba thành phần chính của kiến trúc AUTOSAR, đóng vai trò nền tảng để hỗ trợ phần mềm ứng dụng (SWC) hoạt động trên phần cứng. BSW cung cấp các dịch vụ cơ bản như quản lý phần cứng, giao tiếp, chẩn đoán, và các dịch vụ hệ thống.
+- BSW được chia thành 3 lớp chính:
+	- Service Layer.
+	- ECU Abstraction Layer.
+	- Microcontroller Abstraction Layer - MCAL.
+##### Service Layer:
+- Đây là lớp cao nhất trong BSW, cung cấp các dịch vụ hệ thống và tiện ích cho các phần mềm ứng dụng (SWC) và các lớp khác của BSW. Các dịch vụ này bao gồm quản lý thời gian thực, chẩn đoán, quản lý lỗi, quản lý nguồn, v.v.
+##### ECU Abstraction Layer:
+- Lớp này cung cấp một giao diện trừu tượng cho tất cả các thiết bị ngoại vi và phần cứng cụ thể của ECU. Nó ẩn đi sự khác biệt về phần cứng của các thiết bị ngoại vi khác nhau và cung cấp một giao diện tiêu chuẩn cho các lớp bên trên (Service Layer và SWC).
+##### MCAL:
+- Đây là lớp thấp nhất trong BSW, cung cấp giao diện trừu tượng để tương tác trực tiếp với các thành phần phần cứng của vi điều khiển, chẳng hạn như bộ xử lý trung tâm (CPU), các thiết bị ngoại vi tích hợp (như ADC, PWM, UART), và các bộ định thời (timer).
 
  </details>
+ 
 <details><summary>LESSON 16: OPP </summary>
   <p>
 
@@ -3032,7 +3055,38 @@ Tham số truyền vào access_mod là quyền sử dụng file:
 	  return 0;
 	}
  </details>
+ 
+ <details><summary>LESSON 17: VIRTUAL FUNCTION </summary>
+  <p>
+  
+ ## LESSON 17: Virtual Function
+ ###  Khái niệm
+- Hàm ảo là một hàm thành viên được khai báo trong class cơ sở( là class được các class con khác kế thừa chung) với từ khóa virtual.
+	```cpp
+	class Base{
+	    public:
+	        virtual void display(){
+	            cout << "Display from Base class" << endl;
++ Khi một hàm là virtual, nó có thể được ghi đè (override) trong class con để cung cấp cách triển khai riêng.
++ Nếu lớp con không ghi đè (không cung cấp cách triển khai cụ thể) thì nội dung trong hàm ảo (method) sẽ được định nghĩa là nội dung mặc định trong cơ sở (class gốc)
++ Khi gọi một hàm ảo thông qua một con trỏ hoặc tham chiếu đến lớp con, hàm sẽ được quyết định dựa trên đối tượng thực tế (object) mà con trỏ hoặc tham chiếu đang trỏ tới chứ không dựa vào kiểu dữ liệu mà con trỏ được định nghĩa.
+### Override và tính đa hình Run - time
+- runtime : thay đổi đột ngột, đưa ra quyết định trong quá trình chạy
+- Override là việc ghi đè hàm ảo ở class con bằng cách định nghĩa lại nó. Nó cho phép các lớp con kế thừa ghi đè (override), gom 2 phiên bản method lại thành 1 và chọn phiên bản mới nhất (tính đa hình) -> khi biên dịch sẽ chỉ ra đc 1 method chung (ghi đè lên nhau)
 
+-  Khi một hàm ảo được ghi đè, hành vi của nó sẽ phụ thuộc vào kiểu của đối tượng thực tế, chứ không phải kiểu của con trỏ hay tham chiếu.
+- Tính đa hình Run-time xảy ra khi quyết định gọi hàm nào (phiên bản của class cha hay class con) được đưa ra tại thời điểm chạy, không phải lúc biên dịch, giúp mở rộng chức năng. Điều này giúp chương trình linh hoạt hơn, cho phép việc mở rộng chức năng mà không cần sửa đổi mã nguồn hiện tại.
+
+   
+    + còn overload vẫn giữ 2 phiên bản (tại thời điểm compiler, của tính kế thừa) -> ẩn 1 method để compiler
+- đa hình run time: 
+    + là khả năng chọn phương thức (method)(đa hình) nào đc gọi ra tại thời điểm chạy (runtime) dựa trên loại thực sự của object, không phải kiểu của con trỏ đang trỏ tới
+    + mỗi thời điểm cho trỏ tới 1 object khác nhau, căn cứ vào object thuộc class sẽ cho ra mối method khác nhau(phụ thuộc class), chạy trong quá trình runtime
+    --> có lệnh chuyển object, chuyển đc method theo object --> đa hình trong thời điểm chạy
+- hàm thuần ảo(Pure virtual Function) không có giá trị, những class con kế thừa phải bắt buộc có nội dung ghi đè override lên hàm thuần ảo, k sẽ bị lỗi chương trình
+- không thể tạo ra đối tượng từ class có chứ hàm thuần ảo( nhưng có thể tạo con trỏ đc)
+- đa kế thừa: kế thừa từ nhiều class khác nhau, use chức năng của những class đó
+  </details>
  <details><summary>LESSON 19: NAMESPACE </summary>
   <p>
   
